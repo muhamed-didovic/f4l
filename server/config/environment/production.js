@@ -13,7 +13,11 @@ module.exports = {
 
   // MongoDB connection options
   mongo: {
-    uri: process.env.MONGODB_URI || process.env.MONGOHQ_URL || process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME || 'mongodb://localhost/fan4life'
+    uri: 'mongodb://fantasylive:fantasylive@ds027495.mlab.com:27495/fanstasylive'
+    /*process.env.MONGODB_URI
+      || process.env.MONGOHQ_URL
+      || process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME
+      || 'mongodb://localhost/fan4life'*/
   }
 };
 //# sourceMappingURL=production.js.map
