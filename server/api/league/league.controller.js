@@ -202,7 +202,7 @@ var getBonusData = function getBonusData(fixturesArr) {
 
     //todo: check bonus property better
     if (_.isEmpty(fixturesArr[k].stats)) break;
-    console.log('BONUS', fixturesArr[k].stats[8], fixturesArr[k].started, !!fixturesArr[k].stats[8].bonus.a, fixturesArr[k].stats[8].bonus.h);
+    //console.log('BONUS', fixturesArr[k].stats[8], fixturesArr[k].started, !!fixturesArr[k].stats[8].bonus.a, fixturesArr[k].stats[8].bonus.h);
     if (fixturesArr[k].started && _.isEmpty(fixturesArr[k].stats[8].bonus.a) && _.isEmpty(fixturesArr[k].stats[8].bonus.h)) {
       var _ret = function () {
         var bpsArr = [];
@@ -233,25 +233,31 @@ var getBonusData = function getBonusData(fixturesArr) {
         //   return b.bpsPTS - a.bpsPTS
         // });
         //console.log('bpsArr', bpsArr);
-        if (_.isEmpty(bpsArr) || bpsArr.length <= 4) return 'break';
+        if (_.isEmpty(bpsArr)) return 'break';
         // add bonuses
         var minBP = 3;
         var bonus_pt = 3;
         var empty_pt = 0;
 
         //todo: filter players without bonus
+
         var bonusData = bpsArr.sort(function (a, b) {
           return b.bpsPTS - a.bpsPTS;
-        })
-        //.slice(0, 4)
-        .map(function (item, index) {
+        }).map(function (item, index) {
+          if (index + 1 >= bpsArr.length) return;
+
           var bonus = { playerID: bpsArr[index].playerID, bonusPTS: bonus_pt + empty_pt - index };
+          console.log('empty_pt', empty_pt, 'index:', index, 'bonus points', bonus_pt + empty_pt - index, bonus);
+
           if (bpsArr[index].bpsPTS == bpsArr[index + 1].bpsPTS) {
             empty_pt++;
           } else {
             empty_pt = 0;
           }
+
           return bonus;
+        }).filter(function (item) {
+          return item && item.bonusPTS > 0;
         });
         bonusArr.push(bonusData);
       }();
@@ -259,7 +265,7 @@ var getBonusData = function getBonusData(fixturesArr) {
       if (_ret === 'break') break;
     } //end if
   } //end for
-  //console.log('111', _.flatten(bonusArr));
+  console.log('bonusArr', _.flatten(bonusArr));
   return _.flatten(bonusArr);
 };
 
@@ -405,6 +411,8 @@ function handleEntityNotFound(res) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function (err) {
+    console.error('STATUS CODE AND ERROR', statusCode, err.message);
+    console.error(err);
     res.status(statusCode).send(err);
   };
 }
