@@ -60,7 +60,6 @@ function startServer() {
 }
 
 (0, _setImmediate3.default)(startServer);
-
 // Expose app
 exports = module.exports = app;
 //# sourceMappingURL=app.js.map
